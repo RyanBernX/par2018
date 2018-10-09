@@ -1,2 +1,6 @@
 *.o
 *.sw[op]
+
+# executables
+*.exe
+*.out
