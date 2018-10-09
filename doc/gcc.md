@@ -25,6 +25,8 @@ vimtutor是个很好用的教程，对初学者非常友好，要使用它可在
 
 .vim/
 
+bundle colors spell undo
+
 ### 启动和退出
 
 vim --plugin
@@ -38,11 +40,24 @@ vimdiff
 
 ### 模式转换
 
+主要是命令模式(normal)和插入模式(insert), 还有一些如替换模式和记录模式等
 尽量在命令模式下操作，包括对文件的编辑！
 
 <ESC> CTRL-[  CTRL-O
 
+i  I  a A o O
+
 ### 快速移动
+
+hjkl
+
+fx  tx Fx Tx
+
+) (
+
+} {
+
+n+  n- n$
 
 gj,gk,ctrl-U,ctrl-D
 
@@ -62,13 +77,21 @@ shift+G
 
 gg
 
+M  L  H
+
+%
+
+`.
+
 ### 命令模式下的编辑
 
-d,c
+x,d,c,s,r,R,S
 
 cc
 
-dw
+3cc
+
+cw
 
 d^
 
@@ -86,6 +109,8 @@ p
 
 多重剪贴板通过寄存器实现：regs
 
+"3yy "3p
+
 ### 选中和编辑
 
 v
@@ -93,6 +118,29 @@ v
 V
 
 ctrl-v
+
+### 搜索与替换
+
+/^text$
+
+/text\$\c
+
+?text
+
+:%s/xxx/yyy/g
+
+:s/xxx/yyy/g
+
+:s/xxx/yyy
+
+:s/xxx/yyy/c
+
+:s/xxx/yyy/i
+
+:.,+2s/xxx/yyy/g
+
+:3,5s/xxx/yyy/g
+
 
 ### 撤销和重做
 
@@ -104,12 +152,13 @@ ctrl-R
 
 ### 标记与跳转
 
-```
 ma 
+
 mA
+
 'a
+
 `a
-```
 
 ### 其他
 
@@ -119,11 +168,10 @@ ctrl-z
 
 fg
 
-### 插入模式下如何移动？
-
-最好就不要在插入模式下移动！
-
+插入模式下如何移动？ 最好就不要在插入模式下移动！
 可以选择方向键或者重映射快捷键
+
+中文输入的问题？  在 Linux 上 Vim 处于 Normal 模式时就禁用中文输入法
 
 ### 拓展提高
 
@@ -137,7 +185,17 @@ vim 的各种插件(一般用 VimL 语言编写，来自官网或 GitHub) taglis
 
 ## 使用 GCC 编译程序
 
+gcc -lm -g example.c -o example.exe
+
 ### 编译过程
+
+预处理
+
+编译
+
+汇编
+
+链接
 
 ### 调试选项
 
@@ -157,9 +215,31 @@ O0 O1 O2 O3 Os
 
 ## Linux 上程序的运行
 
-gcc -lm -g example.c -o example.exe
+```
+./example.exe
+```
 
 复杂的编译命令可写在 Makefile 中
+
+### 环境变量
+
+LD_LIBRARY_PATH
+
+PATH
+
+### Linux 上的运行库
+
+file example.exe
+
+nm example.exe
+
+ldd example.exe
+
+类似 Windows 上的 dll ，库依赖很容易导致问题(比如不同的库版本)
+
+静态库与动态库
+
+/etc/ld.so.conf
 
 ### 拓展提高
 
@@ -169,7 +249,82 @@ gcc -lm -g example.c -o example.exe
 
 ## 使用 GDB 来调试
 
-gcc -g
+用 gcc -g 编译并取消优化选项
+
+### 启动和退出
+
+```
+gdb ./example.exe
+quit
+Ctrl-D
+```
+
+
+### 基本使用
+
+#### 用 list 列出源代码
+
+list
+
+help list
+
+list 10
+
+list addResult
+
+list 10,15
+
+list list.h:15
+
+list list.h:addResult
+
+#### 运行程序
+
+run
+
+run arg
+
+#### 使用断点
+
+break 7
+
+break addResult
+
+break list.h:15
+
+break list.h:addResult
+
+info break
+
+break 8 if a == 10
+
+disable 断点号
+
+enable 断点号
+
+disable once 断点号
+
+enable once  断点号
+
+enable delete  断点号
+
+delete 断点号
+
+clear
+
+#### 流程控制
+
+continue
+
+next
+
+step
+
+kill
+
+#### 监控变量
+
+print &a
 
 ### 拓展提高
 
