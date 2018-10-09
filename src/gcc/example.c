@@ -17,24 +17,23 @@ typedef struct MyNode
 	int val;
 	struct MyNode* next;
 }Node;
-Node* result_head = NULL;
-Node* result_tail = NULL;
-void addResult(int _val)
+
+void addResult(Node** _p_result_head, Node** _p_result_tail, int _val)
 {
 	/*printf("check %d\n",_val);*/
 	Node* t = (Node*)malloc(sizeof(Node));
 	t->val = _val;
 	t->next = NULL;
 	//add the new node to the tail
-	if(result_head == NULL)
+	if(*_p_result_head == NULL)
 	{
-		result_head = t;
-		result_tail = result_head;
+		*_p_result_head = t;
+		*_p_result_tail = *_p_result_head;
 	}
 	else
 	{
-		result_tail->next = t;
-		result_tail = t;
+		(*_p_result_tail)->next = t;
+		*_p_result_tail = t;
 	}
 }
 
@@ -46,6 +45,7 @@ int main(int argc, const char* argv[])
 	int list2[] = {2,4,6,8};
 	int list2_num = 4;
 
+	Node *result_head, *result_tail;
 	int pos1 = 0, pos2 = 0;
 	//NOTICE: this strategy not always fails, for example, the final elements of the two lists are the same
 	while(pos1 < list1_num && pos2 < list2_num)
@@ -53,17 +53,17 @@ int main(int argc, const char* argv[])
 		/*printf("check %d %d\n", pos1, pos2);*/
 		if(list1[pos1] < list2[pos2])
 		{
-			addResult(list1[pos1]);
+			addResult(&result_head, &result_tail, list1[pos1]);
 			pos1++;
 		}
 		else if(list1[pos1] > list2[pos2])
 		{
-			addResult(list2[pos2]);
+			addResult(&result_head, &result_tail, list2[pos2]);
 			pos2++;
 		}
 		else   //equal case, only add once
 		{
-			addResult(list1[pos1]);
+			addResult(&result_head, &result_tail, list1[pos1]);
 			pos1++;
 			pos2++;
 		}
