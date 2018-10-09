@@ -48,7 +48,7 @@ int main(int argc, const char* argv[])
 	Node *result_head, *result_tail;
 	int pos1 = 0, pos2 = 0;
 	//NOTICE: this strategy not always fails, for example, the final elements of the two lists are the same
-	while(pos1 < list1_num && pos2 < list2_num)
+	while(pos1 < list1_num || pos2 < list2_num)
 	{
 		/*printf("check %d %d\n", pos1, pos2);*/
 		if(list1[pos1] < list2[pos2])
