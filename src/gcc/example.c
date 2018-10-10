@@ -47,9 +47,9 @@ int main(int argc, const char* argv[])
         }
     }
 
-	//NOTICE: the declaration Node* p=... in for-loop is only allowed in C99 standard
+    //NOTICE: the declaration Node* p=... in for-loop is only allowed in C99 standard
     //output each item in result after sqrt operation
-	for(Node* p = result_head; p != NULL; p = p->next)
+    for(Node* p = result_head; p != NULL; p = p->next)
     {
         double r = sqrt((double)(p->val));
         printf("%lf\n", r);
@@ -58,7 +58,7 @@ int main(int argc, const char* argv[])
     //NOTICE: another bug exists here, but error is not reported when running
     //printf("%p %p\n", result_head, result_tail);
     //release the result list
-	for(Node* p = result_head; p != NULL; p = p->next)
+    for(Node* p = result_head; p != NULL; p = p->next)
     {
         free(p);
         //printf("%p\n", p);
