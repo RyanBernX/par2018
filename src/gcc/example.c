@@ -4,8 +4,8 @@
 # Mail: bookug@qq.com
 # Last Modified: 2018-10-09 08:13
 # Description: union two sorted lists, and apply the sqrt operator on each item
-# For debug, gcc -lm -g example.c -o example
-# To release, gcc -O2 -lm example.c -o example
+# For debug, gcc -lm -g list.c example.c -o example
+# To release, gcc -O2 -lm list.c example.c -o example
 =============================================================================*/
 
 #include <stdio.h>
