@@ -14,19 +14,35 @@
 #include <limits.h> 
 #include "list.h"
 
+#define list1_num 10000
+#define list2_num 10000
+
+int list1[list1_num];
+int list2[list2_num];
+
+void produceData()
+{
+    for(int i = 0; i < list1_num; ++i)
+    {
+        list1[i] = 2 * i + 1;
+    }
+
+    for(int i = 0; i < list2_num; ++i)
+    {
+        list2[i] = 2 * (i+1);
+    }
+}
+
 //NOTICE: sqrt(8) works but sqrt(n) must be compiled by -lm
 int main(int argc, const char* argv[])
 {
-    //int list1[] = {1,3,5,8};
-    int list1[] = {1,3,5,7};
-    int list1_num = 4;
-    int list2[] = {2,4,6,8};
-    int list2_num = 4;
+    produceData();
 
     Node *result_head = NULL, *result_tail = NULL;
     int pos1 = 0, pos2 = 0;
     //NOTICE: this strategy not always fails, for example, the final elements of the two lists are the same
     while(pos1 < list1_num || pos2 < list2_num)
+    //while(pos1 < list1_num && pos2 < list2_num)
     {
         /*printf("check %d %d\n", pos1, pos2);*/
         if(list1[pos1] < list2[pos2])
@@ -46,6 +62,17 @@ int main(int argc, const char* argv[])
             pos2++;
         }
     }
+
+//    while(pos1 < list1_num)
+//    {
+//        addResult(&result_head, &result_tail, list1[pos1]);
+//        pos1++;
+//    }
+//    while(pos2 < list2_num)
+//    {
+//        addResult(&result_head, &result_tail, list2[pos2]);
+//        pos2++;
+//    }
 
     //NOTICE: the declaration Node* p=... in for-loop is only allowed in C99 standard
     //output each item in result after sqrt operation

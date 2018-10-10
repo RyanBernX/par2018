@@ -7,3 +7,7 @@
 
 # debug files
 vgcore.*
+
+# result file
+*.txt
+
