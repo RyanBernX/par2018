@@ -3,8 +3,11 @@
 # Author: bookug
 # Mail: bookug@qq.com
 # Last Modified: 2018-10-09 08:13
-# Description: implementation of list in C
+# Description: declaration of list in C
 =============================================================================*/
+
+#ifdef _LIST_H
+#define _LIST_H
 
 #include <stdio.h>
 #include <math.h> 
@@ -12,27 +15,11 @@
 
 typedef struct MyNode
 {
-	int val;
-	struct MyNode* next;
+    int val;
+    struct MyNode* next;
 }Node;
 
-void addResult(Node** _p_result_head, Node** _p_result_tail, int _val)
-{
-	//printf("check %d\n",_val);
-	//printf("size %d\n", sizeof(Node));
-	Node* t = (Node*)malloc(sizeof(Node));
-	t->val = _val;
-	t->next = NULL;
-	//add the new node to the tail
-	if(*_p_result_head == NULL)
-	{
-		*_p_result_head = t;
-		*_p_result_tail = *_p_result_head;
-	}
-	else
-	{
-		(*_p_result_tail)->next = t;
-		*_p_result_tail = t;
-	}
-}
+void addResult(Node** _p_result_head, Node** _p_result_tail, int _val);
+
+#endif  //_LIST_H
 
