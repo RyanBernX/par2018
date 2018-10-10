@@ -11,3 +11,9 @@ vgcore.*
 # result file
 *.txt
 
+*.i
+*.ii
+*.s
+*.S
+*.a
+*.so
