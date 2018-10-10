@@ -210,9 +210,15 @@ vim 的各种插件(一般用 VimL 语言编写，来自官网或 GitHub) taglis
 
 ## 使用 GCC 编译程序
 
+C99 标准
+
 gcc -lm -g example.c -o example.exe
 
+-g -L -I -l -D
+
 ### 编译过程
+
+详细介绍编译的四个阶段，可以将每个阶段的中间输出展示给大家
 
 预处理
 
@@ -226,15 +232,16 @@ gcc -lm -g example.c -o example.exe
 
 -g
 
-### 优化选项
-
-O0 O1 O2 O3 Os
-
-发行时一般用 O2 或 O3 ，O3选项据称有一定风险
 
 ### 拓展提高
 
 反汇编
+
+优化选项
+
+O0 O1 O2 O3 Os
+
+发行时一般用 O2 或 O3 ，O3选项据称有一定风险
 
 ---
 
