@@ -7,5 +7,5 @@ run.exe: list.h list.c example.c
 .PHONY: clean
 
 clean:
-	rm -f *.out *.exe *.o vgcore.*
+	rm -f *.out *.exe *.o vgcore.* *.txt
 
