@@ -4,3 +4,6 @@
 # executables
 *.exe
 *.out
+
+# debug files
+vgcore.*
