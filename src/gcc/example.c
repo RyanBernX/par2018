@@ -14,8 +14,8 @@
 #include <limits.h> 
 #include "list.h"
 
-#define list1_num 10000
-#define list2_num 10000
+#define list1_num 1000
+#define list2_num 1000
 
 int list1[list1_num];
 int list2[list2_num];
