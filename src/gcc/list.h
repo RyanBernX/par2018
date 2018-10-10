@@ -6,8 +6,8 @@
 # Description: declaration of list in C
 =============================================================================*/
 
-#ifdef _LIST_H
-#define _LIST_H
+#ifndef _MY_LIST_H
+#define _MY_LIST_H
 
 #include <stdio.h>
 #include <math.h> 
@@ -21,5 +21,5 @@ typedef struct MyNode
 
 void addResult(Node** _p_result_head, Node** _p_result_tail, int _val);
 
-#endif  //_LIST_H
+#endif  //_MY_LIST_H
 
