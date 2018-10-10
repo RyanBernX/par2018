@@ -1,2 +1,9 @@
 *.o
 *.sw[op]
+
+# executables
+*.exe
+*.out
+
+# debug files
+vgcore.*
