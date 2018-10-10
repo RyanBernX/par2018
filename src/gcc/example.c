@@ -14,8 +14,6 @@
 #include <limits.h> 
 #include "list.h"
 
-//TODO: for循环写法
-
 //NOTICE: sqrt(8) works but sqrt(n) must be compiled by -lm
 int main(int argc, const char* argv[])
 {
@@ -28,7 +26,7 @@ int main(int argc, const char* argv[])
     Node *result_head = NULL, *result_tail = NULL;
     int pos1 = 0, pos2 = 0;
     //NOTICE: this strategy not always fails, for example, the final elements of the two lists are the same
-    while(pos1 < list1_num && pos2 < list2_num)
+    while(pos1 < list1_num || pos2 < list2_num)
     {
         /*printf("check %d %d\n", pos1, pos2);*/
         if(list1[pos1] < list2[pos2])
@@ -49,36 +47,20 @@ int main(int argc, const char* argv[])
         }
     }
 
-    while(pos1 < list1_num)
-    {
-        addResult(&result_head, &result_tail, list1[pos1]);
-        pos1++;
-    }
-    while(pos2 < list2_num)
-    {
-        addResult(&result_head, &result_tail, list2[pos2]);
-        pos2++;
-    }
-
-
+	//NOTICE: the declaration Node* p=... in for-loop is only allowed in C99 standard
     //output each item in result after sqrt operation
-    Node* p = result_head;
-    while(p != NULL)
+	for(Node* p = result_head; p != NULL; p = p->next)
     {
         double r = sqrt((double)(p->val));
         printf("%lf\n", r);
-        p = p->next;
     }
 
-    //release the result list
-    p = result_head;
     //NOTICE: another bug exists here, but error is not reported when running
     //printf("%p %p\n", result_head, result_tail);
-    while(p != NULL)
+    //release the result list
+	for(Node* p = result_head; p != NULL; p = p->next)
     {
-        Node* tmp = p->next;
         free(p);
-        p = tmp;
         //printf("%p\n", p);
     }
 
