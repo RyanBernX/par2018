@@ -106,6 +106,7 @@ int main(int argc, const char* argv[])
     for(Node* p = result_head; p != NULL; p = p->next)
     {
         free(p);
+        //NOTICE: this set will cause segment fault immediately
         //p = NULL;
         //printf("%p\n", p);
     }

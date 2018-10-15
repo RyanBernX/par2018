@@ -215,7 +215,7 @@ vim 的各种插件(一般用 VimL 语言编写，来自官网或 GitHub)，如t
 如果没有`-o`和后面的参数，编译器默认生成的可执行文件是`a.out`。
 
 ```
- gcc -g -std=c99 -lm -I./inc/ inc/list.c example.c -o run.exe
+ gcc -o run.exe -g -Wall -std=c99 -I./inc/ inc/list.c example.c -lm
 ```
 
 ### C99 标准
@@ -308,6 +308,8 @@ ld -o run.exe example.o inc/list.o -lc -lm
 
 ### 拓展（不讲）
 
+多个链接库相互引用，如何编译？(-lfoo -lbar -lfoo)
+
 复杂的编译命令可写在 Makefile 中
 
 C11和C14标准
@@ -330,19 +332,31 @@ C11和C14标准
 - file run.exe 查看文件格式
 - nm run.exe  列出文件中的符号
 - ldd run.exe 查看依赖的库文件
+- readelf -d run.exe 查看头部信息(也可用来查看链接库的头部信息)
 
 ### 环境变量
 
 默认的GNU加载器`ld.so`，按以下顺序搜索库文件：
 
-- 首先搜索程序中`DT_RPATH`区域（已经被取消使用），除非还有`DT_RUNPATH`区域。
+- 首先搜索程序中`DT_RPATH`区域（不建议使用），除非还有`DT_RUNPATH`区域。
 - 其次搜索`LD_LIBRARY_PATH`。如果程序是`setuid/setgid`，出于安全考虑会跳过这步。
 - 搜索`DT_RUNPATH`区域。
 - 搜索缓存文件`/etc/ld.so.cache`（停用该步请使用'-z nodeflib'加载器参数）
 - 搜索默认目录`/lib`，然后`/usr/lib`（停用该步请使用'-z nodeflib'加载器参数）
 
 上面的顺序可通过`man ld.so`命令查看。
-如果是想让链接库的配置对所有用户可用，可以直接修改`/etc/ld.so.conf`然后使用`ldconfig -v`更新缓存文件。
+如果是想让链接库的配置对所有用户可用，可以直接修改`/etc/ld.so.conf`然后使用`ldconfig -v`更新缓存文件(需要sudo权限)。
+或者也可以把库文件直接移入`/lib`或`/usr/lib`，但不建议这样做。
+
+```
+gcc -o run.exe -Wall -std=c99 example.c -I./inc -L./inc -lm -llist
+echo $LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=${YOUR_PATH}:$LD_LIBRARY_PATH
+echo $LD_LIBRARY_PATH
+unset LD_LIBRARY_PATH
+gcc -o run.exe -Wall -std=c99 example.c -I./inc -L./inc -lm -llist -Wl,--rpath=./inc/
+gcc -o run.exe -Wall -std=c99 example.c -I./inc -L./inc -lm -llist -Wl,--rpath=./inc/,--enable-new-dtags 
+```
 
 ### Linux 上的运行库
 
@@ -359,7 +373,7 @@ Linux 下的库文件分为两大类分别是动态链接库（通常以.so 结�
 例如，如果在inc 目录下有链接时所需要的库文件liblist.so 和liblist.a ，为了让GCC 在链接时只用到静态链接库，可以使用下面的命令（这要求链接到的其他系统库也要安装好相应的静态库版本）：
 
 ```
-gcc -std=c99 example.c -I./inc -L./inc -static -llist -lm -o run.exe
+gcc -o run.exe -std=c99 example.c -static -I./inc -L./inc -llist -lm
 
 ```
 
@@ -384,12 +398,14 @@ ar crv inc/liblist.a inc/list.o
 - 甚至可以真正做到链接载入完全由程序员在程序代码中控制（显示调用）
 
 ```
- gcc --shared -fpic -o inc/liblist.so inc/list.c
+ gcc -o inc/liblist.so -Wall --shared -fpic inc/list.c
 ```
 
 ### 拓展（不讲）
 
 书籍  链接、装载与库
+
+书籍 深入理解计算机系统  (推荐英文版本)
 
 [linux三种方式使用库：静态链接库，动态链接库，动态加载库](https://blog.csdn.net/u014132659/article/details/52252298)
 
