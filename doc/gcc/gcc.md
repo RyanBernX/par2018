@@ -204,6 +204,8 @@ vim 的各种加强版本如 neovim， exvim 等等
 
 vim 的各种插件(一般用 VimL 语言编写，来自官网或 GitHub)，如taglist YouCompleteMe Vundle插件管理器 等等
 
+key mappings: 如ctrl与Caplocks互换，Escape和其下方紧邻的键互换。
+
 书籍  Practical Vim 介绍了各种 Vim 技巧
 
 ![vim operations](vim.png)
@@ -217,6 +219,8 @@ vim 的各种插件(一般用 VimL 语言编写，来自官网或 GitHub)，如t
 ```
  gcc -o run.exe -g -Wall -std=c99 -I./inc/ inc/list.c example.c -lm
 ```
+
+上面的编译命令中，如果将`-lm`写在源文件前面，有时候会编译出错。这是因为`GCC`编译器对参数是顺序扫描的，必须先在源文件中遇到库调用的地方，然后才会去链接相应的库的函数。否则先扫描到`-lm`，但不知道具体链接到源文件的哪个位置，后面再扫描到源文件时想去链接，却已经没有链接库的选项了。
 
 ### C99 标准
 
@@ -308,7 +312,11 @@ ld -o run.exe example.o inc/list.o -lc -lm
 
 ### 拓展（不讲）
 
-多个链接库相互引用，如何编译？(-lfoo -lbar -lfoo)
+源程序引用库A，库A引用库B，编译时链接顺序应是`-lA -lB`
+
+多个链接库相互引用，如何编译？(-lA -lB -lA)
+对于这种循环依赖问题，也可以用`-Wl,--start-group -lA -lB -Wl,--end-group`[这种方法](http://blog.sina.com.cn/s/blog_a9303fd90101cy5y.html)。
+推荐查阅[GCC官方文档](https://gcc.gnu.org/onlinedocs/gcc-4.8.5/gcc/Link-Options.html#Link-Options)，请选择相应的版本对应的文档。
 
 复杂的编译命令可写在 Makefile 中
 
@@ -334,19 +342,23 @@ C11和C14标准
 - ldd run.exe 查看依赖的库文件
 - readelf -d run.exe 查看头部信息(也可用来查看链接库的头部信息)
 
+可以发现`libc.so.6`这个动态库，用`locate libc.so.6`可以找到其位置，再用`ls -l`命令可以发现它是一个软链接以及链接到的位置。
+Linux 上通过这种方式，来解决库版本依赖的问题，更换库版本时只要修改软链接的指向即可。
+
 ### 环境变量
 
 默认的GNU加载器`ld.so`，按以下顺序搜索库文件：
 
 - 首先搜索程序中`DT_RPATH`区域（不建议使用），除非还有`DT_RUNPATH`区域。
 - 其次搜索`LD_LIBRARY_PATH`。如果程序是`setuid/setgid`，出于安全考虑会跳过这步。
-- 搜索`DT_RUNPATH`区域。
+- 搜索`DT_RUNPATH`区域(`DT_RPATH`会传递给当前目标的所有children，但这个选项只针对当前目标自身)。
 - 搜索缓存文件`/etc/ld.so.cache`（停用该步请使用'-z nodeflib'加载器参数）
 - 搜索默认目录`/lib`，然后`/usr/lib`（停用该步请使用'-z nodeflib'加载器参数）
 
 上面的顺序可通过`man ld.so`命令查看。
 如果是想让链接库的配置对所有用户可用，可以直接修改`/etc/ld.so.conf`然后使用`ldconfig -v`更新缓存文件(需要sudo权限)。
 或者也可以把库文件直接移入`/lib`或`/usr/lib`，但不建议这样做。
+下面是一些使用示例，用`-Wl`来表示将后面的参数传给链接器，注意中间不要加空格。
 
 ```
 gcc -o run.exe -Wall -std=c99 example.c -I./inc -L./inc -lm -llist
@@ -357,6 +369,10 @@ unset LD_LIBRARY_PATH
 gcc -o run.exe -Wall -std=c99 example.c -I./inc -L./inc -lm -llist -Wl,--rpath=./inc/
 gcc -o run.exe -Wall -std=c99 example.c -I./inc -L./inc -lm -llist -Wl,--rpath=./inc/,--enable-new-dtags 
 ```
+
+<!-- Some bugs may exist -->
+<!-- https://blog.csdn.net/dbzhang800/article/details/6918413 -->
+<!-- http://blog.qt.io/blog/2011/10/28/rpath-and-runpath/ -->
 
 ### Linux 上的运行库
 
@@ -503,6 +519,15 @@ u 表示从当前地址往后请求的字节数，如果不指定的话，GDB默
 比如`x/4dw 0xbffff650`指的是显示4个单元的内容，以10进制显示，每个单元长度为4个字节。
 
 ### 拓展（不讲）
+
+#### Valgrind
+
+很好用的内存错误调试工具，可用包管理器直接安装。
+有时候程序运行没报错，但其实存在对内存的非法访问(这种情况在数据量足够大时就会报错)，用GDB也不一定能调出来，但用Valgrind可以检测出来。
+Valgrind 可能存在误报的情况(没有问题却报告有问题)，但只要程序中有对内存的非法访问就一定能检测到，是一个非常实用的辅助工具。
+缺点是该工具占用内存较大，如果某些错误只有在数据量极大(逼近内存容量)时才能复现，那么很难用这个工具调试。
+
+生产实践中大型的项目，都有完善的日志机制，通过分析日志就可以快速地定位并解决问题。
 
 #### visual studio 2017 远程调试功能
 
