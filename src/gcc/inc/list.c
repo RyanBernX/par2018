@@ -13,6 +13,7 @@
 
 /**
  * @author bookug
+ * @email bookug@qq.com
  * @function add one element to the result list
  * @param the address of the head pointer of the result list
  * @param the address of the tail pointer of the result list

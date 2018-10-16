@@ -370,6 +370,11 @@ gcc -o run.exe -Wall -std=c99 example.c -I./inc -L./inc -lm -llist -Wl,--rpath=.
 gcc -o run.exe -Wall -std=c99 example.c -I./inc -L./inc -lm -llist -Wl,--rpath=./inc/,--enable-new-dtags 
 ```
 
+上面的`DT_RPATH`和`DT_RUNPATH`中，都是使用相对路径，这在当前目录执行程序是没有问题的。
+但如果切换到其他目录来执行这个程序，依然会提示找不到动态库。
+因此在真正发行软件时，一般会用`--prefix`来指定安装的绝对路径，在编译时将相应的绝对路径直接加在可执行程序中，保证运行时链接动态库不会出问题。
+`LD_LIBRARY_PATH`则一般用于在开发测试时临时使用，设置较为灵活。
+
 <!-- Some bugs may exist -->
 <!-- https://blog.csdn.net/dbzhang800/article/details/6918413 -->
 <!-- http://blog.qt.io/blog/2011/10/28/rpath-and-runpath/ -->
