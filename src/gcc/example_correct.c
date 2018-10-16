@@ -27,6 +27,7 @@ int list2[list2_num];
 
 /**
  * @author bookug
+ * @email bookug@qq.com
  * @function prepare the data for two lists
  * @param no parameters needed
  * @return no value returned here
@@ -46,6 +47,7 @@ void produceData()
 
 /**
  * @author bookug
+ * @email bookug@qq.com
  * @function the main function of C program
  * @param number of arguments in the command, including the program itself
  * @param all argument strings
@@ -58,7 +60,7 @@ int main(int argc, const char* argv[])
     Node *result_head = NULL, *result_tail = NULL;
     int pos1 = 0, pos2 = 0;
     //NOTICE: this strategy not always fails, for example, the final elements of the two lists are the same
-    while(pos1 < list1_num || pos2 < list2_num)
+    while(pos1 < list1_num && pos2 < list2_num)
     //while(pos1 < list1_num && pos2 < list2_num)
     {
         /*printf("check %d %d\n", pos1, pos2);*/
@@ -80,16 +82,16 @@ int main(int argc, const char* argv[])
         }
     }
 
-//    while(pos1 < list1_num)
-//    {
-//        addResult(&result_head, &result_tail, list1[pos1]);
-//        pos1++;
-//    }
-//    while(pos2 < list2_num)
-//    {
-//        addResult(&result_head, &result_tail, list2[pos2]);
-//        pos2++;
-//    }
+    while(pos1 < list1_num)
+    {
+        addResult(&result_head, &result_tail, list1[pos1]);
+        pos1++;
+    }
+    while(pos2 < list2_num)
+    {
+        addResult(&result_head, &result_tail, list2[pos2]);
+        pos2++;
+    }
 
     //NOTICE: the declaration Node* p=... in for-loop is only allowed in C99 standard
     //output each item in result after sqrt operation
@@ -103,9 +105,11 @@ int main(int argc, const char* argv[])
     //NOTICE: another bug exists here, but error is not reported when running
     //printf("%p %p\n", result_head, result_tail);
     //release the result list
-    for(Node* p = result_head; p != NULL; p = p->next)
+    for(Node* p = result_head; p != NULL; )
     {
+        Node* tmp = p->next;
         free(p);
+        p = tmp;
         //NOTICE: this set will cause segment fault immediately
         //p = NULL;
         //printf("%p\n", p);
