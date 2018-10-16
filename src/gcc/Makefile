@@ -21,5 +21,5 @@ lib:
 .PHONY: clean
 
 clean:
-	rm -f *.out *.exe *.o vgcore.* *.txt
+	rm -f *.out *.exe *.o vgcore.* *.txt inc/*.{so,a,i,s,o} *.{so,a,i,s,o}
 
