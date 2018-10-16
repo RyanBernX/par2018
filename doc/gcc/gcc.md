@@ -280,7 +280,7 @@ gcc -S -std=c99 -I./inc example.c -o example.s
 使用汇编器as，将上一步的汇编代码转换成机器码(machine code)，这一步产生的文件叫做目标文件，是二进制格式。
 
 ```
-as -std=c99 -I./inc example.s -o example.o
+as -I./inc example.s -o example.o
 ```
 
 也可以用`gcc -c`来控制，这一步需要为每一个源文件产生一个目标文件，所以我们进入`inc`目录后运行：
