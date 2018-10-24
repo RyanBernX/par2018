@@ -1,5 +1,11 @@
 # git简介
-## git安装
+git 是一个分布式版本控制软件，用于维护代码项目。其本身是Linus大佬为了控制Linux的内核
+版本，又不愿为各种商业版本控制系统左右时，用不到两周的时间用C编写的分布式版本控制系统，
+但其现在不仅管理着Linux内核的开发，也是最流行的分布式版本控制系统。版本控制的意义在于，
+我们写一段代码，或者写一个文档，在不断地对其进行修改和更新的过程中记录我们每一次的修改
+和更新，从而在出现错误是能够及时找到错误的原因或回到未出错的版本进行修改。市面上如今也有
+很多同步协作平台提供本地的自动更新和同步以及版本记录功能，但使用最为广泛的还是git。
+## git安装和初始配置
 查看是否安装git
 `which git`
 使用`apt-get`，`yum`，`pacman`等方式安装git，Mac可以使用homebrew进行安装
@@ -22,7 +28,8 @@ git config --global user.email "mail"
 ```
 git init
 ```
-即可将该目录变成git可以管理的仓库，可以发现目录下多了一个**.git**目录
+即可将该目录变成git可以管理的仓库，可以发现目录下多了一个**.git**目录，里面记录了所有
+git管理的信息，将其删除`rm -rf .git`即可取消git对当前目录的管理。
 使用
 ```
 git status
@@ -30,24 +37,34 @@ git status
 可以方便地查看当前版本库的状态
 
 ## 向版本库添加文件
+
 git能跟踪版本库内所有文本文件的每次改动，具体到哪一行增删了哪些词都会记录。对于二进制文件，
 git只能跟踪其大小的变化。
+
+git有三个特别的区域----工作区，暂存区和头指针。工作区就是我们工作的文件目录，我们实际进行
+代码的修改和增删文件都在工作区进行。
 
 使用
 ```
 git add <filename>
 ```
-可以将文件添加到版本库，其中文件名可以使用通配符，如`git add *`可将目录下的所有文件都添加
-到版本库，实际上是提交到了暂存区。
+可以将文件的修改添加到暂存区，其中文件名可以使用通配符，如`git add *`可将目录下的所有文件都添加
+到暂存区。
 使用
 ```
 git commit -m "comment"
 ```
-可以将暂存区的文件提交到版本库，**comment**部分用来解释本次提交的代码改动说明，方便日后查看。
+可以将暂存区的文件修改提交到版本库，并将头指针HEAD指向当前提交，**comment**部分用来解释本次提交
+的代码改动说明，方便日后查看。
 ```
 git diff
 ```
-可以告诉我们上次提交之后版本库进行了何种修改。
+可以告诉我们当前版本库和HEAD所指向的提交间进行了何种修改。
+
+文件的增删在git中也对应着文件的修改，从版本库中删除文件需要使用
+```
+git rm <filename>
+```
 
 # 版本穿梭
 在我们进行了多次提交后，可以使用
@@ -71,61 +88,28 @@ git reset --hard <commit id>
 ```
 git reflog
 ```
-可以查看我们执行过的每条命令，从而找到我们目标版本的**commit id**。
+可以查看我们执行过的每条命令，从而找到我们目标版本的**commit id**。`git reset`的`--hard`参数表示
+强行将HEAD指针指到`<commit id>`对应的版本。通过`git reset --help`可以查看其更多的操作参数，如
+`--soft`，`--mixed`，`--merge`等。
 
 git管理的是文件的修改，而非文件本身。我们每次使用`git add`会将当前的修改放进暂存区，而后续继续
-对文件的修改则需要新的add操作。可以通过
-```
-git checkout -- <filename>
-```
-放弃对工作区内文件的修改，通过
-```
-git reset HEAD <filename>
-```
-放弃暂存区内的修改。
-git中删除操作也是一种修改，从版本库中删除文件可以用`git rm`删除并使用`git commit`提交修改，通过
-上述的版本库穿梭、撤销修改的操作也可以实现恢复文件的操作。
+对文件的修改则需要新的add操作。可以通过`git checkout -- <filename>`放弃对工作区内文件的修改，通过
+`git reset HEAD <filename>`放弃暂存区内文件的修改。
 
-# 远程仓库
-git的最突出特点之一就是远程仓库，可以将一台电脑的git仓库方便地克隆到其他电脑里。GitHub就是著名的
-免费提供git仓库托管服务的网站，注册GitHub账号即可免费获得git远程仓库。本地的git仓库和GitHub仓库间
-的传输通过ssh协议进行，所以需要先进行ssh设置。
-
-- 创建ssh key
+有时觉得查找`<commit id>`太麻烦，可以给当前的提交添加一个标签，通过
 ```
-ssh-keygen -t -rsa -C <email>
+git tag <tagname>
 ```
-- 在主目录下找到`.ssh`目录，找到**id_rsa.pub**文件
-- 登陆GitHub，在**settings->SSH Keys**页面添加**id_rsa.pub**的内容
-
-## 添加远程库
-在GitHub上创建一个新的仓库，创建页面会提示使用
-```
-git remote add origin git@github.com:username/repo.git
-```
-或者
-```
-git remote add https://github.com/username/repo.git
-```
-在本地链接远程库，通过
-```
-git push -u origin master
-```
-将本地的master分枝推送到远程，第一次使用是会有验证GitHub服务器的SSH Key的警告，输入yes来将GitHub服务器
-的SSH Key添加到本地的信任列表里。
-
-## 从远程库克隆
-通过
-```
-git clone <url>
-```
-的方式可以将远程库克隆到本地。
+添加标签。标签通常标记比较重要的版本更新，从而可以在之后的开发中快速找到之前的稳定版本。所有提交操作
+的`<commit id>`部分都可以替换为对应的标签。
 
 # git的分支管理
 
-## 创建与合并分支
+git最有特色的功能之一就是其分支管理功能，
 git将每次提交串成一条时间线，每条时间线被称为一个分支，默认情况下有一条主分支master。多人协作时，为了
 不妨碍他人的工作，可以创建新的分支进行修改，在修改完成后再和master分支合并。
+
+## 创建与合并分支
 
 通过
 ```
@@ -154,11 +138,47 @@ git branch -d dev
 `>>>>>>>`标注出了不同分支的内容，将文件修改成我们需要的内容后再进行`add`和`commit`即可解决冲突。
 通过`git log --graph`可以看到分支合并的情况。
 
+# 远程仓库
+git的最突出特点之一就是远程仓库，可以将一台电脑的git仓库方便地克隆到其他电脑里。GitHub就是著名的
+免费提供git仓库托管服务的网站，注册GitHub账号即可免费获得git远程仓库。本地的git仓库和GitHub仓库间
+的传输通过ssh协议进行，所以需要先进行ssh设置。
+
+- 创建ssh key
+```
+ssh-keygen -t -rsa -C <email>
+```
+- 在主目录下找到`.ssh`目录，找到**id_rsa.pub**文件
+- 登陆GitHub，在**settings->SSH Keys**页面添加**id_rsa.pub**的内容
+
+## 添加远程库
+在GitHub上创建一个新的仓库，创建页面会提示使用
+```
+git remote add origin git@github.com:username/repo.git
+```
+或者
+```
+git remote add origin https://github.com/username/repo.git
+```
+在本地链接远程库，通过
+```
+git push -u origin master
+```
+将本地的master分枝推送到远程，第一次使用是会有验证GitHub服务器的SSH Key的警告，输入yes来将GitHub服务器
+的SSH Key添加到本地的信任列表里。
+
+## 从远程库克隆
+通过
+```
+git clone <url>
+```
+的方式可以将远程库克隆到本地。通过`git push origin master`可以向其推送分支，通过`git fetch`可以获取最新
+版本的版本库。
+
 ## 多人协作
 当我们从远程仓库克隆时，git自动把本地的`master`分支和远程的`master`分支对应，远程仓库默认名称
 为`origin`，通过
 ```
-git remove -v
+git remote -v
 ```
 可以查看远程分支的详细信息。
 
@@ -172,7 +192,7 @@ git push origin dev
 ```
 git pull
 ```
-将远程的分支抓取到本地试图合并，若有冲突还需手动解除冲突，在本地完成合并和提交后再次`push`即可。
+将远程的分支抓取到本地试图合并(其本质是`git fetch`然后`merge`)，若有冲突还需手动解除冲突，在本地完成合并和提交后再次`push`即可。
 
 `git pull`可能会提示`no tracking information`的错误，需要使用
 ```
