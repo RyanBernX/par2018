@@ -35,6 +35,8 @@ int main(int argc, char **argv){
   if (rank == 0)
     printf("%ld MiB sent in %f sec.\n", 8 * LEN / 1000000, t);
 
+  free(data);
+
   MPI_Finalize();
   return 0;
 }
