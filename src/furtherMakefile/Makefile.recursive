@@ -1,0 +1,4 @@
+all:
+	@echo "main Makefile begins"
+	@$(MAKE) -C subMakefile
+	@echo "main Makefile ends"
