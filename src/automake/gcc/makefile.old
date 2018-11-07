@@ -1,0 +1,10 @@
+objects = hello.o hello_fn.o
+	
+hello : $(objects)
+
+hello.o : hello.h 
+hello_fn.o : hello.h
+
+.PHONY : clean	
+clean :
+	-rm -f hello $(objects)
