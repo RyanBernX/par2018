@@ -3,9 +3,9 @@
 按照[官方文档](https://www.gnu.org/software/make/manual/html_node/Makefile-Contents.html#Makefile-Contents)
 的说法，一个Makefile可以包含以下五部分：
 
-1. 显式规则（explicit rule），即写明的依赖和生成方法的规则。由于显式地提出了整个规则，所以称为显式规则。
+1. 显式规则（explicit rule），即写明的依赖和生成方法的规则。
 2. 隐式规则（implicit rule），即一类有所缺省的规则。在这些简单的情形下，make可以推导出适合的依赖或生成方法。
-3. 变量定义（variable definition），即将某一字符串定义为变量，方便下文使用。
+3. 变量定义（variable definition），即将某一字符串定义为变量，方便之后使用。
 4. 指令（directive），即指导make做一些特殊事情的指令，这包括
     - 读取另一个Makefile的include指令;
     - 根据条件判断执行或忽略下一部分语句的条件指令;
