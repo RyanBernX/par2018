@@ -1,68 +1,55 @@
 #include <stdio.h>
 #include <fftw3.h>
 
-#define N 8
+#define N 16
+
+void print_fftw_complex_array(fftw_complex *data, int numel);
 
 int main()
 {
-	int i;
-	fftw_complex *in, *out;
-	fftw_plan p, p1;
-	in = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
-	out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
-	p = fftw_plan_dft_1d(N, in, out, FFTW_FORWARD, FFTW_ESTIMATE);
-	p1 = fftw_plan_dft_1d(N, out, in, FFTW_BACKWARD, FFTW_ESTIMATE);
+    int i;
+    fftw_complex *in, *out;
+    fftw_plan p, p1;
 
-	if ((in == NULL) || (out == NULL))
-	{
-		printf("Error: insufficient available memory\n");
-	}
-	else
-	{
-		for (i = 0; i < N; i++)
-		{
-			in[i][0] = i + 1;
-			in[i][1] = 0;
-		}
-	}
+    in = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
+    out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
+    p = fftw_plan_dft_1d(N, in, out, FFTW_FORWARD, FFTW_ESTIMATE);
+    p1 = fftw_plan_dft_1d(N, out, in, FFTW_BACKWARD, FFTW_ESTIMATE);
 
-	fftw_execute(p);
+    if ((in == NULL) || (out == NULL))
+    {
+        printf("Error: insufficient available memory\n");
+        return 1;
+    }
+    
+    for (i = 0; i < N; i++)
+    {
+        in[i][0] = i + 1;
+        in[i][1] = 0;
+    }
 
-	for (i = 0; i < N; i++)
-	{
-		printf("%f, %fi\n", in[i][0], in[i][1]);
-	}
-	printf("\n");
+    fftw_execute(p);
 
-	for (i = 0; i < N; i++)
-	{
-		printf("%f, %fi\n", out[i][0], out[i][1]);
-	}
+    print_fftw_complex_array(in, N);
+    printf("\n");
+    print_fftw_complex_array(out, N);
 
+    fftw_execute(p1);
 
-	fftw_execute(p1);
+    fftw_destroy_plan(p);
+    fftw_destroy_plan(p1);
 
-	fftw_destroy_plan(p);
-	fftw_destroy_plan(p1);
+    printf("\n");
 
-	printf("\n");
+    print_fftw_complex_array(in, N);
 
-	for (i = 0; i < N; i++)
-	{
-		printf("%f, %fi\n", in[i][0], in[i][1]);
-	}
-	printf("\n");
+    fftw_free(in);
+    fftw_free(out);
 
-	for (i = 0; i < N; i++)
-	{
-		printf("%f, %fi\n", out[i][0], out[i][1]);
-	}
-
-	if ( in != NULL) fftw_free(in);
-	if ( in != NULL) fftw_free(out);
-
-	return 0;
+    return 0;
 }
 
-
-
+void print_fftw_complex_array(fftw_complex *data, int numel){
+    for (int i = 0; i < numel; ++i)
+        printf("(%f,%f)\n", data[i][0], data[i][1]);
+}
