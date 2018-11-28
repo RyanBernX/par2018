@@ -10,6 +10,7 @@ vgcore.*
 
 # result file
 *.txt
+src/mpi-datatype/*.dat
 
 *.i
 *.ii
