@@ -4,6 +4,9 @@
 # executables
 *.exe
 *.out
+src/lapack/multiply
+src/lapack/admm
+src/lapack/cheby
 
 # debug files
 vgcore.*
