@@ -5,7 +5,7 @@ ifdef MKL
             -lmkl_intel_lp64 -lmkl_core -lmkl_sequential -lm
 else
     CFLAGS=-I/opt/lapack-3.8.0/include
-    LDFLAGS=-L/opt/lapack-3.8.0/lib -llapacke -lcblas -llapack -lblas -lgomp -lgfortran -lm
+    LDFLAGS=-L/opt/lapack-3.8.0/lib -llapacke -lcblas -llapack -lblas -lgfortran -lm
 endif
 
 .PHONY: all clean
