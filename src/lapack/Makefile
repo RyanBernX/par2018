@@ -1,6 +1,12 @@
 CC=gcc
-CFLAGS=-I/opt/lapack-3.8.0/include
-LDFLAGS=-L/opt/lapack-3.8.0/lib -llapacke -lcblas -llapack -lblas -lgomp -lgfortran -lm
+ifdef MKL
+    CFLAGS=-I${MKLROOT}/lib/intel64 -DHAVE_MKL -m64
+    LDFLAGS=-Wl,--no-as-needed -Wl,-rpath ${MKLROOT}/lib/intel64 -L${MKLROOT}/lib/intel64 \
+            -lmkl_intel_lp64 -lmkl_core -lmkl_sequential -lm
+else
+    CFLAGS=-I/opt/lapack-3.8.0/include
+    LDFLAGS=-L/opt/lapack-3.8.0/lib -llapacke -lcblas -llapack -lblas -lgomp -lgfortran -lm
+endif
 
 .PHONY: all clean
 

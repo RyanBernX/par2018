@@ -1,9 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <omp.h>
 #include <math.h>
+#include <time.h>
+
+#ifdef HAVE_MKL
+#include "mkl.h"
+#else
 #include <cblas.h>
+#endif
 
 void my_multiply(int, int, int, const double *, const double *, double *);
 
@@ -12,7 +17,7 @@ int main(int argc, char **argv){
   double *A, *B, *C, *C1, t, res;
 
   if (argc != 2){
-    fprintf(stderr, "Usage: ./a.out <dim>\n");
+    fprintf(stderr, "Usage: ./multiply <dim>\n");
     return 1;
   }
 
@@ -28,14 +33,14 @@ int main(int argc, char **argv){
     B[i] = (2.0 * i - 1);
   }
 
-  t = omp_get_wtime();
+  t = clock();
   cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, N, N, N, 1.0, \
     A, N, B, N, 0.0, C, N);
-  printf("BLAS: %f\n", omp_get_wtime() - t);
+  printf("BLAS: %f\n", (clock() - t) / CLOCKS_PER_SEC);
 
-  t = omp_get_wtime();
+  t = clock();
   my_multiply(N, N, N, A, B, C1);
-  printf("My BLAS: %f\n", omp_get_wtime() - t);
+  printf("My BLAS: %f\n", (clock() - t) / CLOCKS_PER_SEC);
 
   /* compare results */
   for (int i = 0; i < N * N; ++i){

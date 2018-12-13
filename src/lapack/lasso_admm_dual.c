@@ -20,8 +20,14 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
+
+#ifdef HAVE_MKL
+#include "mkl.h"
+#else
 #include <cblas.h>
 #include <lapacke.h>
+#endif
+
 #include "lasso_admm_dual.h"
 
 #define SPARSITY 0.1
