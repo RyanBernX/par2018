@@ -9,8 +9,8 @@ int is_end = 0;
 int rank;
 
 /**
- * MPI´íÎó´¦ÀíÆ÷ 
- * Õâ¸ö´íÎó´¦ÀíÆ÷¼òµ¥µÄ´òÓ¡´¦´íÎóºÅºÍÏàÓ¦µÄËµÃ÷×Ö·û´®£¬È»ºóÍË³öMPIÏµÍ³
+ * MPIé”™è¯¯å¤„ç†å™¨ 
+ * è¿™ä¸ªé”™è¯¯å¤„ç†å™¨ç®€å•çš„æ‰“å°å¤„é”™è¯¯å·å’Œç›¸åº”çš„è¯´æ˜å­—ç¬¦ä¸²ï¼Œç„¶åé€€å‡ºMPIç³»ç»Ÿ
  */
 void err_handler(MPI_Comm * comm, int * err_code, ...)
 {
@@ -23,8 +23,8 @@ void err_handler(MPI_Comm * comm, int * err_code, ...)
 }
 
 /**
- * POSIXĞÅºÅ´¦ÀíÆ÷ 
- * ½«is_endÉèÎª1£¬²¢´òÓ¡³öĞÅºÅ²¶×½Çé¿öµÄĞÅÏ¢
+ * POSIXä¿¡å·å¤„ç†å™¨ 
+ * å°†is_endè®¾ä¸º1ï¼Œå¹¶æ‰“å°å‡ºä¿¡å·æ•æ‰æƒ…å†µçš„ä¿¡æ¯
  */
 void signal_handler(int sig)
 {
@@ -34,9 +34,9 @@ void signal_handler(int sig)
 }
 
 /**
- * ×ÓÏß³Ì 
- * ×ÓÏß³ÌÃ¿Á½ÃëÖÓÏòÖÈ1½ø³Ì·¢ËÍÒ»´Îis_end£¬ÔÚis_endµÈÓÚ1Ê±ÍË³ö£¬²¢×îºóÔÙ·¢ËÍÒ»´Îis_end,
- * ÒÔÍ¨ÖªÖÈ1½ø³Ì½áÊø£¬×îºó´òÓ¡³ö½áÊøĞÅÏ¢
+ * å­çº¿ç¨‹ 
+ * å­çº¿ç¨‹æ¯ä¸¤ç§’é’Ÿå‘ç§©1è¿›ç¨‹å‘é€ä¸€æ¬¡is_endï¼Œåœ¨is_endç­‰äº1æ—¶é€€å‡ºï¼Œå¹¶æœ€åå†å‘é€ä¸€æ¬¡is_end,
+ * ä»¥é€šçŸ¥ç§©1è¿›ç¨‹ç»“æŸï¼Œæœ€åæ‰“å°å‡ºç»“æŸä¿¡æ¯
  */
 void * child_function(void * args)
 {
@@ -62,21 +62,21 @@ int main(int argc, char * argv[])
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Errhandler_create(&err_handler, &errhdl);
   MPI_Errhandler_set(MPI_COMM_WORLD, errhdl);
-  if (rank == 0) { // ÖÈ0½ø³Ì
-    // ´´½¨×ÓÏß³Ì
+  if (rank == 0) { // ç§©0è¿›ç¨‹
+    // åˆ›å»ºå­çº¿ç¨‹
     ret = pthread_create(&thread, NULL, &child_function, NULL);
-    if (ret != 0) { // Èç¹û´´½¨×ÓÏß³ÌÊ§°Ü£¬ÔòÍË³ö
+    if (ret != 0) { // å¦‚æœåˆ›å»ºå­çº¿ç¨‹å¤±è´¥ï¼Œåˆ™é€€å‡º
       printf("create thread failure, error code: %d\n", ret);
       MPI_Abort(MPI_COMM_WORLD, 1);
     }
-    else { // ·ñÔòÉèÖÃ¸¸Ïß³ÌµÄĞÅºÅ´¦Àí¾ä±ú
+    else { // å¦åˆ™è®¾ç½®çˆ¶çº¿ç¨‹çš„ä¿¡å·å¤„ç†å¥æŸ„
       signal(SIGTERM, &signal_handler);
       printf("send signal TERM to process %d to terminate.\n", getpid());
-      pthread_join(thread, NULL); // µÈ´ı×ÓÏß³Ì·µ»Ø
+      pthread_join(thread, NULL); // ç­‰å¾…å­çº¿ç¨‹è¿”å›
     }
   }
-  else { // ÖÈ1½ø³Ì
-    while (!is_end) { // Ã¿5ÃëÖÓ½ÓÊÕÒ»´Îis_end
+  else { // ç§©1è¿›ç¨‹
+    while (!is_end) { // æ¯5ç§’é’Ÿæ¥æ”¶ä¸€æ¬¡is_end
       printf("rank %d: is_end = %d, sleeping ...\n", rank, is_end);
       sleep(5);
       MPI_Recv(&is_end, 1, MPI_INT, 0, 99, MPI_COMM_WORLD, &status);
