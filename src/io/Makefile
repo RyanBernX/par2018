@@ -9,10 +9,10 @@ all: ${TARGETS}
 	${CC} -g -o $@ $< -lpthread
 
 08: 08.c
-	${CXX} -g -o $@ $<
+	g++ -g -o $@ $<
 
 09: 09.c
-	${CXX} -g -o $@ $<
+	g++ -g -o $@ $<
 
 th: th.c
 	gcc -g -o $@ $< -lpthread

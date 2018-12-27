@@ -53,6 +53,7 @@ int main(int argc, char * argv[])
 	    neighbour_process[0][i], 
 	    neighbour_process[1][i]);
   }
+  MPI_Comm_free(&MPI_COMM_CART);
   MPI_Finalize();
 
   return 0;
